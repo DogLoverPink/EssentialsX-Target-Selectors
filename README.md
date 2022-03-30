@@ -17,15 +17,19 @@ The very popular plugin [EssentialsX](https://essentialsx.net), has never had su
 **Examples**:
 Without plugin (normal essentialsX)
 `/give @a dirt` -> `Unknown player @a`
+
 `/kill @p` -> `Unknown player @p`
+
 `give @r diamond 5` - > `Unknown player @r`
 
 With Essentials Selectors Plugin:
 `/give @a dirt` -> `*gives every player on the server dirt*`
+
 `/kill @p` -> `*kills the closest player*`
+
 `give @r diamond 5` - > `*gives the closest player 5 diamonds*`
 
 # IMPORTANT:
-This plugin does not replace EssentialsX! You still need to install the orginial [EssentialsX](https://essentialsx.net) plugin for this to work!
+**This plugin does not replace EssentialsX! You still need to install the orginial [EssentialsX](https://essentialsx.net) plugin for this to work!**
 
 
