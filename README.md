@@ -1,10 +1,10 @@
 # EssentialsX-Target-Selectors
 This minecraft plugin adds @a, @p, and @r to EssentialsX Commands! Works with command block and console aswell!
 
-#Usage:
+# Usage:
 Just pop this into your server, and it will just work! No commands, no config no nothing! As simple as could be.
 
-#How is this helpful and what does it do?
+# How is this helpful and what does it do?
 The very popular plugin [EssentialsX](https://essentialsx.net), has never had support for target selectors like @a, or @p. And especially when working with command blocks, those selectors would be very helpful if they existed, But with this plugin, they do!
 
 @a - all players
@@ -25,7 +25,7 @@ With Essentials Selectors Plugin:
 `/kill @p` -> `*kills the closest player*`
 `give @r diamond 5` - > `*gives the closest player 5 diamonds*`
 
-#IMPORTANT:
+# IMPORTANT:
 This plugin does not replace EssentialsX! You still need to install the orginial [EssentialsX](https://essentialsx.net) plugin for this to work!
 
 
