@@ -29,7 +29,7 @@ public class CommandExecute implements Listener{
  @EventHandler
      public void onCommandThingy(PlayerCommandPreprocessEvent event) {
          String[] args = event.getMessage().split("\\s");
-         if (!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().equals("Essentials")) return;
+         if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().equals("Essentials")) return;
          Player plr = event.getPlayer();
          //plr.sendMessage(
              //"Info: \n"+
@@ -104,7 +104,7 @@ public class CommandExecute implements Listener{
     @EventHandler
     public void onConsoleCommandThingy(ServerCommandEvent event) {
         String[] args = event.getCommand().split("\\s");
-        if (!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().equals("Essentials")) return;
+        if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().equals("Essentials")) return;
          CommandSender plr = event.getSender();
          //plr.sendMessage(
              //"Info: \n"+
@@ -122,6 +122,7 @@ public class CommandExecute implements Listener{
             }
 
             if (args[argWithAt].equalsIgnoreCase("@r")) {
+                if (Bukkit.getOnlinePlayers().size() == 0) return;
                 Player[] allPlayers = new Player[Bukkit.getOnlinePlayers().size()];
                 int i = 0;
                 for(Player all : Bukkit.getServer().getOnlinePlayers()) {
@@ -146,7 +147,6 @@ public class CommandExecute implements Listener{
                 Block theCommandBlock = blockCommandSender.getBlock();
                 if (args[argWithAt].equalsIgnoreCase("@p")) {
                     event.setCancelled(true);
-
                     Player[] allPlayers = new Player[Bukkit.getOnlinePlayers().size()];
                     int i = 0;
                     List<Location> locations = new ArrayList<Location>();
