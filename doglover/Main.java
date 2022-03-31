@@ -1,4 +1,6 @@
 package doglover;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import doglover.Events.CommandExecute;
@@ -8,6 +10,15 @@ public class Main extends JavaPlugin{
 		@Override
 		public void onEnable() {
             getServer().getPluginManager().registerEvents(new CommandExecute(this), this);
+            if (getServer().getPluginManager().getPlugin("Essentials") == null) {
+                Bukkit.getLogger().warning("-------------------");
+                Bukkit.getLogger().warning("WARN FROM ESSENTIALS SELECTORS:");
+                Bukkit.getLogger().warning("EssentialsX not detected!");
+                Bukkit.getLogger().warning("Please Download EssentialsX for Essentials Selector to work!");
+                Bukkit.getLogger().warning("Offical EssentialsX download: https://essentialsx.net");
+                Bukkit.getLogger().warning("Or ignore this, it doesn't actually affect your server at all :)");
+                Bukkit.getLogger().warning("-------------------");
+            }
 
             /*for(Player all : Bukkit.getServer().getOnlinePlayers()) {
                 Conversation conversation = factory.buildConversation(all);
