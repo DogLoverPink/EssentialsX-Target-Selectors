@@ -143,7 +143,8 @@ public class CommandExecute implements Listener{
                         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args[0].replaceFirst("/", "")+" "+args[1]+" "+randomPlayer.getName()+" "+fullCommand);}
                     
             }
-            if (event.getSender() instanceof BlockCommandSender blockCommandSender) {
+            if (event.getSender() instanceof BlockCommandSender) {
+            	BlockCommandSender blockCommandSender = (BlockCommandSender) event.getSender();
                 Block theCommandBlock = blockCommandSender.getBlock();
                 if (args[argWithAt].equalsIgnoreCase("@p")) {
                     event.setCancelled(true);
