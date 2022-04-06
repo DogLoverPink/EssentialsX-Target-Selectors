@@ -4,12 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import doglover.Events.CommandExecute;
+import doglover.Events.TabEvent;
 
 public class Main extends JavaPlugin{
-    //private static ConversationFactory factory = new ConversationFactory(doglover.Events.CommandExecute.plugin);
 		@Override
 		public void onEnable() {
             getServer().getPluginManager().registerEvents(new CommandExecute(this), this);
+            getServer().getPluginManager().registerEvents(new TabEvent(), this);
             if (getServer().getPluginManager().getPlugin("Essentials") == null) {
                 Bukkit.getLogger().warning("-------------------");
                 Bukkit.getLogger().warning("WARN FROM ESSENTIALS SELECTORS:");
