@@ -11,14 +11,7 @@ public class TabEvent implements Listener {
     @EventHandler
      public void onTabComplete(TabCompleteEvent event) {
          List<String> completions = event.getCompletions();
-         boolean isEssentialsCommand = false;
-         for (String entry: completions) {
-             if (entry.equals("*")) {
-                 isEssentialsCommand = true;
-                 break;
-             }
-         }
-         if (!isEssentialsCommand) return;
+         if (!completions.contains("*")) return;
          completions.remove("*");
          completions.remove("**");
          if (event.getSender() instanceof Player) {
