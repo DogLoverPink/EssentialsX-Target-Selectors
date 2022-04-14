@@ -29,7 +29,7 @@ With Essentials Selectors Plugin:
 
 `/kill @p` -> `*kills the closest player*`
 
-`give @r diamond 5` - > `*gives the closest player 5 diamonds*`
+`give @r diamond 5` - > `*gives a random player 5 diamonds*`
 
 # IMPORTANT:
 **This plugin does not replace EssentialsX! You still need to install the orginial [EssentialsX](https://essentialsx.net) plugin for this to work!**
