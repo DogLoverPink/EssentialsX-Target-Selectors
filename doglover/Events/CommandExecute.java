@@ -31,6 +31,7 @@ public class CommandExecute implements Listener{
          String[] args = event.getMessage().split("\\s");
          if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().equals("Essentials")) return;
          Player plr = event.getPlayer();
+         if (!plr.hasPermission("essxselectors.use")) return;
          //plr.sendMessage(
              //"Info: \n"+
             // "args: "+Arrays.toString(args)+
@@ -47,7 +48,7 @@ public class CommandExecute implements Listener{
 		}
 
 
-        if (args[argWithAt].equalsIgnoreCase("@s") || args[argWithAt].equalsIgnoreCase("@p")) {
+        if ((args[argWithAt].equalsIgnoreCase("@s") || args[argWithAt].equalsIgnoreCase("@p")) && (plr.hasPermission("essxselectors.self") || plr.hasPermission("essxselectors.closest"))) {
                 event.setCancelled(true);
                 if (argWithAt == 1 ){
                     if (args.length > 2) { fullCommand = args[2]+" "+fullCommand;}
@@ -58,7 +59,7 @@ public class CommandExecute implements Listener{
                 
         }
 
-        if (args[argWithAt].equalsIgnoreCase("@r")) {
+        if (args[argWithAt].equalsIgnoreCase("@r") && plr.hasPermission("essxselectors.random")) {
             Player[] allPlayers = new Player[Bukkit.getOnlinePlayers().size()];
             int i = 0;
             for(Player all : Bukkit.getServer().getOnlinePlayers()) {
@@ -80,7 +81,7 @@ public class CommandExecute implements Listener{
                 
         }
 
-            if (args[argWithAt].equalsIgnoreCase("@a")) {
+            if (args[argWithAt].equalsIgnoreCase("@a") && plr.hasPermission("essxselectors.all")) {
                 Conversation conversation = factory.buildConversation((Player) plr);
                 for(Player all : Bukkit.getServer().getOnlinePlayers()) {
                     event.setCancelled(true);

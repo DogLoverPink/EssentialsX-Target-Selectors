@@ -4,3 +4,20 @@ author: DogLoverPink
 version: 1.3
 main: doglover.Main
 api-version: 1.13
+
+permissions:
+  essxselectors.use:
+    description: Enables using any @ command
+    default: true
+  essxselectors.all:
+    description: Enables @a
+    default: op
+  essxselectors.random:
+    description: Enables @r
+    default: op
+  essxselectors.self:
+    description: Enables @s
+    default: true
+  essxselectors.closest:
+    description: Enables @p
+    default: true
