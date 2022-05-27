@@ -11,7 +11,14 @@ public class TabEvent implements Listener {
     @EventHandler
      public void onTabComplete(TabCompleteEvent event) {
          List<String> completions = event.getCompletions();
-         if (!completions.contains("*")) return;
+         boolean isEssentialsCommand = false;
+         for (String entry: completions) {
+             if (entry.equals("*")) {
+                 isEssentialsCommand = true;
+                 break;
+             }
+         }
+         if (!isEssentialsCommand) return;
          completions.remove("*");
          completions.remove("**");
          if (event.getSender() instanceof Player) {
@@ -19,9 +26,15 @@ public class TabEvent implements Listener {
          completions.add("@r");
          completions.add("@p");
          completions.add("@s");
+         completions.add("@a[");
+         completions.add("@r[");
+         completions.add("@p[");
+         completions.add("@s[");
          } else {
             completions.add("@a");
             completions.add("@r");
+            completions.add("@a[");
+            completions.add("@r[");
          }
          event.setCompletions(completions);
 
