@@ -1,7 +1,7 @@
 name: EssentialsSelectors
 description: Adds @a, @r, @s, and @p selectors to EssentialsX commands!
 author: DogLoverPink
-version: 1.4
+version: 1.6
 main: doglover.Main
 api-version: 1.13
 
@@ -20,4 +20,5 @@ permissions:
     default: true
   essxselectors.closest:
     description: Enables @p
-    default: true
+    default: true 
+
