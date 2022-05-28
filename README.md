@@ -30,6 +30,7 @@ With Essentials Selectors Plugin:
 `/kill @p` -> `*kills the closest player*`
 
 `give @r diamond 5` - > `*gives a random player 5 diamonds*`
+
 There are also specifications for selectors, for example: "@r[gamemode=creative]"
 
 There are 5 specifications that can be added to any selectors:
