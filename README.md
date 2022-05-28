@@ -30,6 +30,17 @@ With Essentials Selectors Plugin:
 `/kill @p` -> `*kills the closest player*`
 
 `give @r diamond 5` - > `*gives a random player 5 diamonds*`
+There are also specifications for selectors, for example: "@r[gamemode=creative]"
+
+There are 5 specifications that can be added to any selectors:
+ - gamemode
+ - tag
+ - limit
+ - distance
+ - level
+You can also add a "!" before a value to do the opposite. For example: "@<!-- -->A[tag=!"CoolTag"]"
+
+For a list of what all of these do, and how to use them, refer to my spigot page documentation [HERE](https://www.spigotmc.org/resources/essentialsx-selectors-a-p-r-addon.101057/field?field=documentation).
 
 # IMPORTANT:
 **This plugin does not replace EssentialsX! You still need to install the orginial [EssentialsX](https://essentialsx.net) plugin for this to work!**
