@@ -10,18 +10,15 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
-import org.bukkit.conversations.Conversation;
-import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
-import doglover.Main;
 import doglover.SelectorUtils;
 
 public class ServerCommandExecute implements Listener{
@@ -29,9 +26,9 @@ public class ServerCommandExecute implements Listener{
 	@EventHandler
     public void onConsoleCommandThingy(ServerCommandEvent event) {
         String[] args = event.getCommand().split("\\s");
-        if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().equals("Essentials")) return;
+        if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().contains("Essentials")) return;
          CommandSender plr = event.getSender();
-         //plr.sendMessage(
+         //plr.sendMessage( 
              //"Info: \n"+
             // "args: "+Arrays.toString(args)+
              //"\nPlugin: "+Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getPlugin()+
@@ -42,7 +39,7 @@ public class ServerCommandExecute implements Listener{
             if (args.length > 2 && args[2].startsWith("@")) argWithAt = 2;
             if (argWithAt == 0) return;
             String fullCommand = "";
-		    for (int i = 0; i < args.length; i++) {
+		    for (int i = 0; i < args.length; i++) { 
 			    if (i > 2)fullCommand = fullCommand+" "+args[i];
             }
 		    
@@ -51,6 +48,8 @@ public class ServerCommandExecute implements Listener{
 	          String tag = "none";
 	          String level = "none";
 	          String gamemode = "none";
+	          String world = "none";
+	          String team = "none";
 	          int limit = 99999;
 	          
 	          //For example, let's pretend the entered specifications was this @a[level=5,distance=!10,tag="Kill"]
@@ -72,7 +71,7 @@ public class ServerCommandExecute implements Listener{
 	            	  try {
 	                  	  value = m.group().substring(1, m.group().length()-1).split("=")[1].toLowerCase();//Gets the value after the "=", and sets to lower case
 	                      } catch(IndexOutOfBoundsException e) {
-	                    	  plr.sendMessage("§cHmm, an error occured. Are you missing a closing bracket or \"=value\"?");
+	                    	  plr.sendMessage("Â§cHmm, an error occured. Are you missing a closing bracket or \"=value\"?");
 	                    	  continue;
 	                      }
 	              } else value = m.group().substring(1, m.group().length()-1).split("=")[1]; //Tags are case sensitive, no lowercase
@@ -86,7 +85,7 @@ public class ServerCommandExecute implements Listener{
 						int theLevel = Integer.valueOf(value.replaceFirst("!", ""));
 	            		  distance = value;
 	            	  }catch (Exception e) {
-	            		  event.getSender().sendMessage("§cExpected an integer for \"distance\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+	            		  event.getSender().sendMessage("Â§cExpected an integer for \"distance\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
 	            		  }
 	            	//Debug: System.out.println("Distance being set to "+value);
 	            	  distance = value;
@@ -96,6 +95,12 @@ public class ServerCommandExecute implements Listener{
 	            	//Debug: System.out.println("tag being set to "+value);
 	            	  tag = value;
 	            	  break;
+	            	  
+	              case "team":
+	            	  if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);//Remove qoutes
+	            	  /*Debug: System.out.println("tag being set to "+value);*/
+	            	  team = value;
+	            	  break;
 	              case "level":
 	            	//Debug: System.out.println("level being set to "+value);
 	            	  try {
@@ -103,7 +108,7 @@ public class ServerCommandExecute implements Listener{
 	            		  int theLevel = Integer.valueOf(value.replaceFirst("!", ""));
 	            		  level = value;
 	            	  } catch (Exception e) {
-	            		  event.getSender().sendMessage("§cExpected an integer for \"level\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+	            		  event.getSender().sendMessage("Â§cExpected an integer for \"level\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
 	            	  }
 	            	  break;
 	              case "gamemode":
@@ -114,7 +119,7 @@ public class ServerCommandExecute implements Listener{
 	            		  GameMode gm = GameMode.valueOf(value.toUpperCase().replaceFirst("!", ""));
 	            		  gamemode = value;
 	            	  } catch (Exception e) {
-	            		  event.getSender().sendMessage("§cExpected a gamemode for \"gamemode\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+	            		  event.getSender().sendMessage("Â§cExpected a gamemode for \"gamemode\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
 	            	  }
 	            	  break;
 	              case "limit":
@@ -122,12 +127,25 @@ public class ServerCommandExecute implements Listener{
 	            		  limit = Integer.valueOf(value);
 	            	  } catch (Exception e) {
 	            		  limit = 99999;
-	            		  event.getSender().sendMessage("§cExpected an integer for \"limit\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+	            		  event.getSender().sendMessage("Â§cExpected an integer for \"limit\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
 	            	  }
 	            	//Debug: System.out.println("limit being set to "+value);
 	            	  break;
+	            	  
+	              case "world":
+	            	  if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);//Remove qoutes
+	            	  //Debug: System.out.println("world being set to "+value);
+	            	  try {
+	            		  World wrld = Bukkit.getWorld(world.replaceFirst("!", ""));
+	            		  wrld.canGenerateStructures(); //Throws exception if world equals null.
+	            		  world = value;
+	            	  } catch (Exception e) {
+	            		  plr.sendMessage("Â§cExpected an existing loaded world for \"world\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
+	            	  }
+	            	  break;
+	            	  
 	              default:
-	            	  event.getSender().sendMessage("§cInvalid selector \"§e"+selector+"§c\", Ignoring it.");
+	            	  event.getSender().sendMessage("Â§cInvalid selector \"Â§e"+selector+"Â§c\", Ignoring it.");
 	            	//Debug: System.out.println("Thats not a valid selector you dummy!");
 	              }
 	              
@@ -139,7 +157,7 @@ public class ServerCommandExecute implements Listener{
 	        	  playerList = (Collection<Player>) Bukkit.getOnlinePlayers();
 	          } else {
 	          for (Player loopPlr : Bukkit.getOnlinePlayers()) {
-	        	  if(SelectorUtils.doesPlayerMeetReqs(loopPlr, tag, level, gamemode)) playerList.add(loopPlr);
+	        	  if(SelectorUtils.doesPlayerMeetReqs(loopPlr, tag, level, gamemode, world, team)) playerList.add(loopPlr);
 	          }
 	          }
 		    
@@ -202,14 +220,17 @@ public class ServerCommandExecute implements Listener{
                     int i = 0;
                     List<Location> locations = new ArrayList<Location>();
                     for(Player all : playerList) {
+                    if (!all.getWorld().equals(theCommandBlock.getWorld())) continue;
                     allPlayers[i] = all;
                     locations.add(all.getLocation());
-                        i++;
+                    i++;
                     }
                     //^ Put all players locations in a arraylist
 
                     Location myLocation = theCommandBlock.getLocation();
-                    Location closest = locations.get(0);
+                    Location closest = null; //Yikes!
+                    if (locations.size() > 0) {
+                    closest = locations.get(0);
                     double closestDist = closest.distance(myLocation);
                     for (Location loc : locations) { //Loop to find closest target
                         if (loc.distance(myLocation) < closestDist) {
@@ -217,6 +238,7 @@ public class ServerCommandExecute implements Listener{
                             closest = loc;
                         }
                     }
+                    
                     Player closetPlayer = Bukkit.getPlayer("NoOnlinePlayers"); //Needs to be declared, and setting to null would throw errors
                     for(Player all : playerList) {
                         if (all.getLocation().equals(closest)) closetPlayer = all;
@@ -229,7 +251,7 @@ public class ServerCommandExecute implements Listener{
                     }
                     if (argWithAt == 2) {
                         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),args[0].replaceFirst("/", "")+" "+args[1]+" "+closetPlayer.getName()+" "+fullCommand);}
-                    
+                    }
             }
               }
             if (args[argWithAt].equalsIgnoreCase("@a")) {
@@ -238,12 +260,12 @@ public class ServerCommandExecute implements Listener{
                     if (argWithAt == 1){
                         if (args.length > 2 && !checkedForBigArgs) {
                             fullCommand = args[2]+" "+fullCommand;checkedForBigArgs=true;}
-                            //plr.sendMessage("§eRunning §a"+args[0].replaceFirst("/", "")+" @a"+fullCommand);
+                            //plr.sendMessage("Â§eRunning Â§a"+args[0].replaceFirst("/", "")+" @a"+fullCommand);
                          Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args[0].replaceFirst("/", "")+" "+all.getName()+" "+fullCommand);
                         }
                     event.setCancelled(true);
                     if (argWithAt == 2) {
-                        //plr.sendMessage("§eRunning §a"+args[0].replaceFirst("/", "")+" "+args[1]+" @a "+fullCommand);
+                        //plr.sendMessage("Â§eRunning Â§a"+args[0].replaceFirst("/", "")+" "+args[1]+" @a "+fullCommand);
                         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args[0].replaceFirst("/", "")+" "+args[1]+" "+all.getName()+" "+fullCommand);
 }
                 }
