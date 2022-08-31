@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
@@ -27,10 +28,11 @@ public class PlayerCommandExecute implements Listener {
 	}
     private static ConversationFactory factory = new ConversationFactory(plugin);
     public static String lastCommand;
- @EventHandler
+    @SuppressWarnings("unchecked")
+@EventHandler
      public void onCommandThingy(PlayerCommandPreprocessEvent event) {
          String[] args = event.getMessage().split("\\s");
-         if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().equals("Essentials")) return;
+         if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().contains ("Essentials")) return;
          Player plr = event.getPlayer();
          if (!plr.hasPermission("essxselectors.use")) return;
          //plr.sendMessage(
@@ -68,11 +70,16 @@ public class PlayerCommandExecute implements Listener {
                 plr.performCommand(args[0].replaceFirst("/", "")+" "+args[1]+" "+plr.getName()+" "+fullCommand);}  
                 return;
         }
+        fullCommand = fullCommand.replace("  ", " ");
 
         String distance = "none";
         String tag = "none";
         String level = "none";
         String gamemode = "none";
+        String world = "none";
+        String team = "none";
+        
+        
         int limit = 99999;
         
         //For example, let's pretend the entered specifications was this @a[level=5,distance=!10,tag="Kill"]
@@ -95,7 +102,7 @@ public class PlayerCommandExecute implements Listener {
               try {
           	  value = m.group().substring(1, m.group().length()-1).split("=")[1].toLowerCase();//Gets the value after the "=", and sets to lower case
               } catch(IndexOutOfBoundsException e) {
-            	  plr.sendMessage("§cHmm, an error occured. Are you missing a closing bracket or \"=value\"?");
+            	  plr.sendMessage("Â§cHmm, an error occured. Are you missing a closing bracket or \"=value\"?");
             	  continue;
               }
               } else value = m.group().substring(1, m.group().length()-1).split("=")[1]; //Tags are case sensitive, no lowercase
@@ -106,41 +113,47 @@ public class PlayerCommandExecute implements Listener {
           	  if (value.startsWith("!..")) value = "!"+value.substring(3);
           	  try {
           		  @SuppressWarnings("unused")
-					int theLevel = Integer.valueOf(value.replaceFirst("!", ""));
+					int theLevel = Integer.valueOf(value.replaceFirst("!", "")); //Uhhhhh...
           		  distance = value;
           	  }catch (Exception e) {
-          		  plr.sendMessage("§cExpected an integer for \"distance\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+          		  plr.sendMessage("Â§cExpected an integer for \"distance\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
           		  }
-          	  //Debug: System.out.println("Distance being set to "+value);
+          	  /*Debug: System.out.println("Distance being set to "+value);*/
           	  distance = value;
           	  break;
           	  
             case "tag":
           	  if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);//Remove qoutes
-          	  //Debug: System.out.println("tag being set to "+value);
+          	  /*Debug: System.out.println("tag being set to "+value);*/
           	  tag = value;
           	  break;
           	  
+            case "team":
+            	  if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);//Remove qoutes
+            	  /*Debug: System.out.println("tag being set to "+value);*/
+            	  team = value;
+            	  break;
+          	  
             case "level":
-          	  //Debug: System.out.println("level being set to "+value);
+          	  /*Debug: System.out.println("level being set to "+value);*/
           	  try {
           		  @SuppressWarnings("unused")
-          		  int theLevel = Integer.valueOf(value.replaceFirst("!", ""));
+          		  int theLevel = Integer.valueOf(value.replaceFirst("!", ""));//Hmmmmmmmm
           		  level = value;
           	  } catch (Exception e) {
-          		  plr.sendMessage("§cExpected an integer for \"level\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+          		  plr.sendMessage("Â§cExpected an integer for \"level\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
           	  }
           	  break;
           	  
             case "gamemode":
           	  if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);//Remove qoutes
-          	  //Debug: System.out.println("gamemode being set to "+value);
+          	  /*Debug: System.out.println("gamemode being set to "+value);*/
           	  try {
           		  @SuppressWarnings("unused")
           		  GameMode gm = GameMode.valueOf(value.toUpperCase().replaceFirst("!", ""));
           		  gamemode = value;
           	  } catch (Exception e) {
-          		  plr.sendMessage("§cExpected a gamemode for \"gamemode\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+          		  plr.sendMessage("Â§cExpected a gamemode for \"gamemode\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
           	  }
           	  break;
           	  
@@ -149,13 +162,26 @@ public class PlayerCommandExecute implements Listener {
           		  limit = Integer.valueOf(value);
           	  } catch (Exception e) {
           		  limit = 99999;
-          		  plr.sendMessage("§cExpected an integer for \"limit\" tag, but found \"§e"+value+"§c\" instead! §e(Ignoring it)");
+          		  plr.sendMessage("Â§cExpected an integer for \"limit\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
           	  }
-          	  //Debug: System.out.println("limit being set to "+value);
+          	  /*Debug:*/ System.out.println("limit being set to "+value);
           	  break;
+          	  
+            case "world":
+            	  if (value.startsWith("\"") && value.endsWith("\"")) value = value.substring(1, value.length()-1);//Remove qoutes
+            	  /*Debug: System.out.println("world being set to "+value);*/
+            	  try {
+            		  World wrld = Bukkit.getWorld(world.replaceFirst("!", ""));
+            		  wrld.canGenerateStructures(); //Throws exception if world equals null.
+            		  world = value;
+            	  } catch (Exception e) {
+            		  plr.sendMessage("Â§cExpected an existing loaded world for \"world\" tag, but found \"Â§e"+value+"Â§c\" instead! Â§e(Ignoring it)");
+            	  }
+            	  break;
+          	  
             default:
-          	  plr.sendMessage("§cInvalid selector \"§e"+selector+"§c\", Ignoring it.");
-          	  //Debug: System.out.println("Thats not a valid selector you dummy!");
+          	  plr.sendMessage("Â§cInvalid selector \"Â§e"+selector+"Â§c\", Ignoring it.");
+          	  /*Debug: System.out.println("Thats not a valid selector you dummy!");*/
             }
             
         }}
@@ -163,17 +189,18 @@ public class PlayerCommandExecute implements Listener {
         Collection<Player> playerList = new ArrayList<Player>();
         
         if (args[argWithAt].length() < 3) {
+        	
       	  playerList = (Collection<Player>) Bukkit.getOnlinePlayers();
         } else {
         for (Player loopPlr : Bukkit.getOnlinePlayers()) {
-      	  if(SelectorUtils.doesPlayerMeetReqs(loopPlr, tag, level, gamemode)) playerList.add(loopPlr);
+      	  if(SelectorUtils.doesPlayerMeetReqs(loopPlr, tag, level, gamemode, world, team)) playerList.add(loopPlr);
         }
         }
 	    
 	    
-	    //Debug: System.out.println("PlayerList size is "+playerList.size());
+	    /*Debug: System.out.println("PlayerList size is "+playerList.size());*/
 	    args[argWithAt] = args[argWithAt].substring(0, 2);
-	    //Debug: System.out.println(args[argWithAt]);
+	    /*Debug: System.out.println(args[argWithAt]); */
 	    
 	    //limit stuff below
 	    if (playerList.size() > limit) {
@@ -183,6 +210,7 @@ public class PlayerCommandExecute implements Listener {
 	    	}
 	    	for (Player removeplr : toRemove) playerList.remove(removeplr);
 	    }
+	    
 	    if (!distance.equals("none")) {
       		Collection<Player> removeList = new ArrayList<Player>();
       	for (Player loopPlr: playerList) {
@@ -190,6 +218,8 @@ public class PlayerCommandExecute implements Listener {
              }
       	for (Player playerToRemove: removeList) playerList.remove(playerToRemove);
       	}
+	    
+	    
       	//^ Special @p check because
       	
       	if (playerList.size() == 0) return;
@@ -245,13 +275,14 @@ public class PlayerCommandExecute implements Listener {
                   if (all.getLocation().equals(closest)) closetPlayer = all;
               }
 
-
+              /*Debug:*/ System.out.println("Option 1: "+args[0].replaceFirst("/", "")+" "+closetPlayer.getName()+" "+fullCommand);
+              /*Debug:*/ System.out.println("Option 2: "+plr.performCommand(args[0].replaceFirst("/", "")+" "+args[1]+" "+closetPlayer.getName()+" "+fullCommand));
               if (argWithAt == 1 ){
                   if (args.length > 2) { fullCommand = args[2]+" "+fullCommand;}
-                  Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),args[0].replaceFirst("/", "")+" "+closetPlayer.getName()+" "+fullCommand);
+                  plr.performCommand(args[0].replaceFirst("/", "")+" "+closetPlayer.getName()+" "+fullCommand);
               }
               if (argWithAt == 2) {
-                  Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),args[0].replaceFirst("/", "")+" "+args[1]+" "+closetPlayer.getName()+" "+fullCommand);}
+            	  plr.performCommand(args[0].replaceFirst("/", "")+" "+args[1]+" "+closetPlayer.getName()+" "+fullCommand);}
               
         }
       if (args[argWithAt].equalsIgnoreCase("@a")) {
@@ -261,12 +292,12 @@ public class PlayerCommandExecute implements Listener {
               if (argWithAt == 1){
                   if (args.length > 2 && !checkedForBigArgs) {
                       fullCommand = args[2]+" "+fullCommand; checkedForBigArgs=true;}
-                      lastCommand = "§eRan §a"+args[0].replaceFirst("/", "")+" @a"+fullCommand;
+                      lastCommand = "Â§eRan Â§a"+args[0].replaceFirst("/", "")+" @a"+fullCommand;
                    plr.performCommand(args[0].replaceFirst("/", "")+" "+all.getName()+" "+fullCommand);
                   }
               event.setCancelled(true);
               if (argWithAt == 2) {
-            	  lastCommand = "§eRan §a"+args[0].replaceFirst("/", "")+" @a"+fullCommand;
+            	  lastCommand = "Â§eRan Â§a"+args[0].replaceFirst("/", "")+" @a"+fullCommand;
                   plr.performCommand(args[0].replaceFirst("/", "")+" "+args[1]+" "+all.getName()+" "+fullCommand);
 }
               factory.withFirstPrompt(doglover.ConverseThing.noChat).withEscapeSequence("cancel");
