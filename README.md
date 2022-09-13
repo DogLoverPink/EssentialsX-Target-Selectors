@@ -33,12 +33,13 @@ With Essentials Selectors Plugin:
 
 There are also specifications for selectors, for example: "@r[gamemode=creative]"
 
-There are 5 specifications that can be added to any selectors:
+There are 6 specifications that can be added to any selectors:
  - gamemode
  - tag
  - limit
  - distance
  - level
+ - team
 You can also add a "!" before a value to do the opposite. For example: "@<!-- -->A[tag=!"CoolTag"]"
 
 For a list of what all of these do, and how to use them, refer to my spigot page documentation [HERE](https://www.spigotmc.org/resources/essentialsx-selectors-a-p-r-addon.101057/field?field=documentation).
