@@ -32,7 +32,13 @@ public class PlayerCommandExecute implements Listener {
 @EventHandler
      public void onCommandThingy(PlayerCommandPreprocessEvent event) {
          String[] args = event.getMessage().split("\\s");
-         if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().contains ("Essentials")) return;
+         if (
+        		 Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null 
+        		 || Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()) == null
+        		 || Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin() == null
+        		 || !Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().contains ("Essentials")
+        		 ) 
+        	 return;
          Player plr = event.getPlayer();
          if (!plr.hasPermission("essxselectors.use")) return;
          //plr.sendMessage(
