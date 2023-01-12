@@ -26,7 +26,13 @@ public class ServerCommandExecute implements Listener{
 	@EventHandler
     public void onConsoleCommandThingy(ServerCommandEvent event) {
         String[] args = event.getCommand().split("\\s");
-        if (Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null ||!Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().contains("Essentials")) return;
+        if (
+        		Bukkit.getPluginCommand(args[0].replaceFirst("/", "")) == null 
+        		|| Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()) == null
+               	|| Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin() == null
+        		|| !Bukkit.getPluginCommand(Bukkit.getPluginCommand(args[0].replaceFirst("/", "")).getName()).getPlugin().getName().contains("Essentials")
+        		) 
+        	return;
          CommandSender plr = event.getSender();
          //plr.sendMessage( 
              //"Info: \n"+
