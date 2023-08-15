@@ -1,0 +1,24 @@
+name: EssentialsSelectors
+description: Adds @a, @r, @s, and @p selectors to EssentialsX commands!
+author: DogLoverPink
+version: 1.7.2
+main: dogloverpink.Main
+api-version: 1.13
+
+permissions:
+  essxselectors.use:
+    description: Enables using any @ command
+    default: true
+  essxselectors.all:
+    description: Enables @a
+    default: true
+  essxselectors.random:
+    description: Enables @r
+    default: true
+  essxselectors.self:
+    description: Enables @s
+    default: true
+  essxselectors.closest:
+    description: Enables @p
+    default: true 
+
