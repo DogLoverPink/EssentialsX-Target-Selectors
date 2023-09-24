@@ -82,22 +82,19 @@ public class ServerCommandExecute implements Listener {
 				String value;
 				String selector = m.group().substring(1, m.group().length() - 1).split("=")[0].toLowerCase()
 						.replaceAll("\\s", "");// Gets the value before the "="
-				if (!selector.equals("tag")) {
-					try {
+				try {
+					if (!selector.equals("tag") && !selector.equals("team")) {
 						value = m.group().substring(1, m.group().length() - 1).split("=")[1].toLowerCase();// Gets the
-																											// value
-																											// after the
-																											// "=", and
-																											// sets to
-																											// lower
-																											// case
-					} catch (IndexOutOfBoundsException e) {
-						plr.sendMessage("§cHmm, an error occured. Are you missing a closing bracket or \"=value\"?");
-						continue;
-					}
-				} else
-					value = m.group().substring(1, m.group().length() - 1).split("=")[1]; // Tags are case sensitive, no
-																							// lowercase
+					} else
+						value = m.group().substring(1, m.group().length() - 1).split("=")[1]; // value
+					// after the
+					// "=", and
+					// sets to
+					// lower case
+				} catch (IndexOutOfBoundsException e) {
+					plr.sendMessage("§cHmm, an error occured. Are you missing a closing bracket or \"=value\"?");
+					continue;
+				}
 
 				switch (selector) {
 					case "distance":
