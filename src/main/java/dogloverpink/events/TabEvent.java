@@ -2,6 +2,8 @@ package dogloverpink.events;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,8 +13,17 @@ public class TabEvent implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         List<String> completions = event.getCompletions();
+        // PluginCommand cmd = Bukkit.getServer().getPluginCommand();
         if (!completions.contains("*"))
             return;
+        String command = event.getBuffer().split("\\s+")[0];
+        if (command.startsWith("/")) {
+            command = command.substring(1);
+        }
+        PluginCommand cmd = Bukkit.getServer().getPluginCommand(command);
+        if (cmd == null || cmd.getPlugin() == null || !cmd.getPlugin().getName().startsWith("Essentials")) {
+            return;
+        }
         completions.remove("*");
         completions.remove("**");
         if (event.getSender() instanceof Player) {
