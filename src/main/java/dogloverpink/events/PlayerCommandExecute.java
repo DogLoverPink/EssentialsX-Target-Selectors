@@ -1,32 +1,42 @@
 package dogloverpink.events;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import dogloverpink.EssentialsXTargetSelectors;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import dogloverpink.selectorUtils.SelectorUtils;
-import dogloverpink.selectors.AllSelector;
 
 public class PlayerCommandExecute implements Listener {
+
+    public static EssentialsXTargetSelectors plugin;
+    public static ConversationFactory conversationFactory = new ConversationFactory(plugin);
+    public static String lastCommand;
+
+    public static Prompt noChat = new StringPrompt() {
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return lastCommand;
+        }
+
+        @Override
+        public Prompt acceptInput(ConversationContext context, String input) {
+            return Prompt.END_OF_CONVERSATION;
+        }
+    };
 
     @EventHandler
     public void onPlayerCommandExecute(PlayerCommandPreprocessEvent event) {
         String[] args = event.getMessage().split("\\s+");
         PluginCommand command = Bukkit.getPluginCommand(args[0].replaceFirst("/", ""));
-        if (command == null) {
-            return;
-        }
-        PluginCommand otherCommand = Bukkit.getPluginCommand(command.getName());
-
-        if (command == null
-                || otherCommand == null
-                || otherCommand.getPlugin() == null
-                || !otherCommand.getPlugin().getName().contains("Essentials")) {
+        if (command == null || !command.getPlugin().getName().contains("Essentials")) {
             return;
         }
 
@@ -70,31 +80,40 @@ public class PlayerCommandExecute implements Listener {
                 return;
         }
 
-        ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        List<Player> players = new ArrayList<>();
 
-        players = SelectorUtils.handleSpecifications(plr, players, args[argNumWithSelector]);
-
-        SelectorUtils.handleSelector(plr, players, args[argNumWithSelector]);
+        try {
+            List<Entity> entities = Bukkit.selectEntities(event.getPlayer(), args[argNumWithSelector]);
+            entities.forEach(entity -> {
+                if (entity instanceof Player) {
+                    players.add((Player) entity);
+                }
+            });
+        } catch (IllegalArgumentException e) {
+            plr.sendMessage("§c" + e.getCause().getMessage());
+            event.setCancelled(true);
+            return;
+        }
 
         if (players.isEmpty()) {
             return;
         }
         event.setCancelled(true);
         if (args[argNumWithSelector].startsWith("@a") && players.size() > 1) {
-            Conversation conversation = AllSelector.conversationFactory.buildConversation(plr);
-            AllSelector.lastCommand = "§eRan §a"+fullCommand.replace("%TARGET%", args[argNumWithSelector]);
+            Conversation conversation = conversationFactory.buildConversation(plr);
+            lastCommand = "§eRan §a" + fullCommand.replace("%TARGET%", args[argNumWithSelector]);
             int count = 0;
             for (Player target : players) {
                 String cmdToRun = fullCommand.replace("%TARGET%", target.getName()).trim();
                 cmdToRun = cmdToRun.substring(1);
                 plr.performCommand(cmdToRun);
                 if (count == 0) {
-                    AllSelector.conversationFactory.withFirstPrompt(AllSelector.noChat).withEscapeSequence("cancel");
+                    conversationFactory.withFirstPrompt(noChat).withEscapeSequence("cancel");
                     conversation.begin();
                 }
             }
             conversation.abandon();
-            
+
         } else {
             for (Player target : players) {
                 String cmdToRun = fullCommand.replace("%TARGET%", target.getName()).trim();

@@ -13,7 +13,6 @@ public class TabEvent implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         List<String> completions = event.getCompletions();
-        // PluginCommand cmd = Bukkit.getServer().getPluginCommand();
         if (!completions.contains("*"))
             return;
         String command = event.getBuffer().split("\\s+")[0];
