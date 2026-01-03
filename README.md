@@ -1,3 +1,6 @@
+
+<img width="854" height="94" alt="essex banner" src="https://github.com/user-attachments/assets/e7da2e99-fd6a-4b65-8a24-0a373ef7d4f5" />
+
 # EssentialsX-Target-Selectors
 This minecraft plugin adds @a, @p, and @r to EssentialsX Commands! Works with command block and console aswell!
 
