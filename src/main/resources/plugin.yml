@@ -1,9 +1,10 @@
 name: EssentialsSelectors
 description: Adds @a, @r, @s, and @p selectors to EssentialsX commands!
 author: DogLoverPink
-version: 2.1.0
+version: 2.1.1
 main: dogloverpink.EssentialsXTargetSelectors
 api-version: 1.13
+folia-supported: true
 
 permissions:
   essxselectors.use:
